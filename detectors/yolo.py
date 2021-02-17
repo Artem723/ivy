@@ -49,7 +49,7 @@ def get_bounding_boxes_cpu(image):
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.5 and CLASSES[class_id] in CLASSES_OF_INTEREST:
+            if confidence > conf_threshold and CLASSES[class_id] in CLASSES_OF_INTEREST:
                 width = image.shape[1]
                 height = image.shape[0]
                 center_x = int(detection[0] * width)
@@ -74,15 +74,19 @@ def get_bounding_boxes_cpu(image):
 
 def get_bounding_boxes_gpu(img):
     from pydarknet import Image
-
+    conf_threshold = float(os.getenv('YOLO_CONFIDENCE_THRESHOLD'))
     img_darknet = Image(img)
     results = net.detect(img_darknet)
-
+    width = img.shape[1]
+    height = img.shape[0]
     _bounding_boxes, _classes, _confidences = [], [], []
     for cat, score, bounds in results:
         _class = str(cat.decode('utf-8'))
         if _class in CLASSES_OF_INTEREST:
-            _bounding_boxes.append(bounds)
+            changed_bounds = list(bounds)
+            changed_bounds[0] = changed_bounds[0] - bounds[2] / 2
+            changed_bounds[1] = changed_bounds[1] - bounds[3] / 2
+            _bounding_boxes.append(changed_bounds)
             _classes.append(_class)
             _confidences.append(score)
 

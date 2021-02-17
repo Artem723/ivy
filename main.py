@@ -20,7 +20,7 @@ def run():
     from VehicleCounter import VehicleCounter
 
     logger = get_logger()
-
+    print("CV2: ", cv2)
     # capture traffic scene video
     is_cam = ast.literal_eval(os.getenv('IS_CAM'))
     video = int(os.getenv('VIDEO')) if is_cam else os.getenv('VIDEO')
