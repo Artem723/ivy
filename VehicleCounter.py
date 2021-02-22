@@ -7,7 +7,7 @@ from util.detection_roi import get_roi_frame, draw_roi
 from util.logger import get_logger
 from counter import has_crossed_counting_line
 
-
+FPS = 30
 logger = get_logger()
 
 class VehicleCounter():
@@ -27,6 +27,12 @@ class VehicleCounter():
         self.f_height, self.f_width, _ = self.frame.shape
         self.frame_count = 0 # number of frames since last detection
         self.counts_by_type_per_line = {counting_line['label']: {} for counting_line in counting_lines} # counts of vehicles by type for each counting line
+
+        # speed estimation props
+        self.fps = 30
+        self.distance_between_speed_labels = 30 # in meters
+        self.sum_speed = 0
+        self.times_speed_counted = 0
 
         # create blobs from initial frame
         droi_frame = get_roi_frame(self.frame, self.droi)
@@ -59,15 +65,23 @@ class VehicleCounter():
             # count vehicle if it has crossed a counting line
             for counting_line in self.counting_lines:
                 label = counting_line['label']
+                # if label == "A":
+                #     continue
+                speed_km_h = -1
                 if has_crossed_counting_line(blob.bounding_box, counting_line['line']) and \
                         label not in blob.lines_crossed:
                     if blob.type in self.counts_by_type_per_line[label]:
                         self.counts_by_type_per_line[label][blob.type] += 1
                     else:
                         self.counts_by_type_per_line[label][blob.type] = 1
-
+    
                     blob.lines_crossed.append(label)
-
+                    if label == "A_SPEED":
+                        blob.is_speed_being_estimated = True
+                        continue
+                    if label == "B_SPEED" and blob.is_speed_being_estimated:
+                        blob.is_speed_being_estimated = False
+                        speed_km_h = self.estimate_speed(blob)
                     logger.info('Vehicle counted.', extra={
                         'meta': {
                             'label': 'VEHICLE_COUNT',
@@ -78,20 +92,23 @@ class VehicleCounter():
                             'position_counted': blob.centroid,
                             'counted_at':time.time(),
                             'counts_by_type_per_line': self.counts_by_type_per_line,
+                            'estimated_speed': (speed_km_h if speed_km_h != -1 else 'N/A'),
+                            'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A'
                         },
                     })
+            if blob.is_speed_being_estimated:
+                blob.time_inside_speedmarks += 1
 
             if blob.num_consecutive_tracking_failures >= self.mctf:
                 # delete untracked blobs
                 del self.blobs[_id]
 
-        if self.frame_count >= self.di:
+        if bool(self.frame_count % self.di):
             # rerun detection
             droi_frame = get_roi_frame(self.frame, self.droi)
             _bounding_boxes, _classes, _confidences = get_bounding_boxes(droi_frame, self.detector)
             self.blobs = add_new_blobs(_bounding_boxes, _classes, _confidences, self.blobs, self.frame, self.tracker, self.mcdf)
             self.blobs = remove_duplicates(self.blobs)
-            self.frame_count = 0
 
         self.frame_count += 1
 
@@ -120,3 +137,12 @@ class VehicleCounter():
             frame = draw_roi(frame, self.droi)
 
         return frame
+
+    def estimate_speed(self, blob):
+
+        time_hours = (blob.time_inside_speedmarks / self.fps) / 3600
+        speed_km_h = (self.distance_between_speed_labels / 1000) / time_hours
+        self.sum_speed += speed_km_h
+        self.times_speed_counted += 1
+
+        return speed_km_h

@@ -16,6 +16,9 @@ class Blob:
         self.num_consecutive_detection_failures = 0
         self.lines_crossed = [] # list of counting lines crossed by a vehicle
         self.position_first_detected = tuple(self.centroid)
+        # properties for speed estimation
+        self.is_speed_being_estimated = False
+        self.time_inside_speedmarks = 0
 
     def update(self, _bounding_box, _type=None, _confidence=None, _tracker=None):
         self.bounding_box = _bounding_box
