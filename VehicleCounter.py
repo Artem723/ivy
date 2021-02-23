@@ -12,7 +12,7 @@ logger = get_logger()
 
 class VehicleCounter():
 
-    def __init__(self, initial_frame, detector, tracker, droi, show_droi, mcdf, mctf, di, counting_lines):
+    def __init__(self, initial_frame, detector, tracker, droi, show_droi, mcdf, mctf, di, counting_lines, fps, distance_between_speed_labels):
         self.frame = initial_frame # current frame of video
         self.detector = detector
         self.tracker = tracker
@@ -29,8 +29,8 @@ class VehicleCounter():
         self.counts_by_type_per_line = {counting_line['label']: {} for counting_line in counting_lines} # counts of vehicles by type for each counting line
 
         # speed estimation props
-        self.fps = 30
-        self.distance_between_speed_labels = 30 # in meters
+        self.fps = fps if fps is not None else 30
+        self.distance_between_speed_labels = distance_between_speed_labels if distance_between_speed_labels is not None else 10 # in meters
         self.sum_speed = 0
         self.times_speed_counted = 0
 

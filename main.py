@@ -40,6 +40,7 @@ def run():
     tracker = os.getenv('TRACKER')
     # create detection region of interest polygon
     use_droi = ast.literal_eval(os.getenv('USE_DROI'))
+    distance_between_speed_labels = int(os.getenv('DISTANCE_BETWEEN_SPEED_LABELS'))
     droi = ast.literal_eval(os.getenv('DROI')) \
             if use_droi \
             else [(0, 0), (f_width, 0), (f_width, f_height), (0, f_height)]
@@ -47,7 +48,7 @@ def run():
     counting_lines = ast.literal_eval(os.getenv('COUNTING_LINES'))
 
     vehicle_counter = VehicleCounter(frame, detector, tracker, droi, show_droi, mcdf,
-                                     mctf, detection_interval, counting_lines)
+                                     mctf, detection_interval, counting_lines, cv2.CV_CAP_PROP_FPS, distance_between_speed_labels)
 
     record = ast.literal_eval(os.getenv('RECORD'))
     headless = ast.literal_eval(os.getenv('HEADLESS'))
