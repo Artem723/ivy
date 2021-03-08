@@ -93,6 +93,7 @@ class VehicleCounter():
                             'counted_at':time.time(),
                             'counts_by_type_per_line': self.counts_by_type_per_line,
                             'estimated_speed': (speed_km_h if speed_km_h != -1 else 'N/A'),
+                            'FPS': self.fps,
                             'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A'
                         },
                     })
@@ -141,6 +142,10 @@ class VehicleCounter():
     def estimate_speed(self, blob):
 
         time_hours = (blob.time_inside_speedmarks / self.fps) / 3600
+        
+        if time_hours == 0: 
+            return -1
+        
         speed_km_h = (self.distance_between_speed_labels / 1000) / time_hours
         self.sum_speed += speed_km_h
         self.times_speed_counted += 1

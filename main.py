@@ -48,7 +48,7 @@ def run():
     counting_lines = ast.literal_eval(os.getenv('COUNTING_LINES'))
 
     vehicle_counter = VehicleCounter(frame, detector, tracker, droi, show_droi, mcdf,
-                                     mctf, detection_interval, counting_lines, cv2.CV_CAP_PROP_FPS, distance_between_speed_labels)
+                                     mctf, detection_interval, counting_lines, 30, distance_between_speed_labels) # 30 fps
 
     record = ast.literal_eval(os.getenv('RECORD'))
     headless = ast.literal_eval(os.getenv('HEADLESS'))
