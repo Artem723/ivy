@@ -1,3 +1,4 @@
+from util.direction import Direction
 import cv2
 from tracker import add_new_blobs, remove_duplicates
 from collections import OrderedDict
@@ -6,7 +7,9 @@ import time
 from util.detection_roi import get_roi_frame, draw_roi
 from util.logger import get_logger
 from counter import has_crossed_counting_line
-
+# TODO: implement speed estimation in the both directions
+#       - use Right and LEft bars
+#       - use one BAR for counting
 FPS = 30
 logger = get_logger()
 
@@ -38,6 +41,7 @@ class VehicleCounter():
         droi_frame = get_roi_frame(self.frame, self.droi)
         _bounding_boxes, _classes, _confidences = get_bounding_boxes(droi_frame, self.detector)
         self.blobs = add_new_blobs(_bounding_boxes, _classes, _confidences, self.blobs, self.frame, self.tracker, self.mcdf)
+        self.moving_orientation = Direction.RIGHT
 
     def get_blobs(self):
         return self.blobs
