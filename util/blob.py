@@ -19,6 +19,7 @@ class Blob:
         # properties for speed estimation
         self.is_speed_being_estimated = False
         self.time_inside_speedmarks = 0
+        self.offset_pxs = 0
 
     def update(self, _bounding_box, _type=None, _confidence=None, _tracker=None):
         self.bounding_box = _bounding_box
