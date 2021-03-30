@@ -11,7 +11,7 @@ def run():
     import os
     import sys
     import time
-
+    from util.orientation import Orientation
     import cv2
 
     from util.image import take_screenshot
@@ -38,6 +38,12 @@ def run():
     mctf = int(os.getenv('MCTF'))
     detector = os.getenv('DETECTOR')
     tracker = os.getenv('TRACKER')
+    orientation_param = int(os.getenv('ORIENTATION'))
+    lines_orientation = None
+    if orientation_param == 1:
+        lines_orientation = Orientation.VERTICAL
+    else:
+        lines_orientation = Orientation.HORIZONTAL
     # create detection region of interest polygon
     use_droi = ast.literal_eval(os.getenv('USE_DROI'))
     distance_between_speed_labels = int(os.getenv('DISTANCE_BETWEEN_SPEED_LABELS'))
@@ -45,10 +51,16 @@ def run():
             if use_droi \
             else [(0, 0), (f_width, 0), (f_width, f_height), (0, f_height)]
     show_droi = ast.literal_eval(os.getenv('SHOW_DROI'))
-    counting_lines = ast.literal_eval(os.getenv('COUNTING_LINES'))
+    # counting_lines = ast.literal_eval(os.getenv('COUNTING_LINES'))
 
+    examining_lines = ast.literal_eval(os.getenv('EXAMINING_LINES'))
+    counting_lines = None
+    if lines_orientation == Orientation.VERTICAL:
+        counting_lines = [{'label': l['label'], 'line': [l['start'], (l['start'][0], l['start'][1] + l['length'])]} for l in examining_lines]
+    else:
+        counting_lines = [{'label': l['label'], 'line': [l['start'], (l['start'][0] + l['length'], l['start'][1])]} for l in examining_lines]
     vehicle_counter = VehicleCounter(frame, detector, tracker, droi, show_droi, mcdf,
-                                     mctf, detection_interval, counting_lines, 30, distance_between_speed_labels) # 30 fps
+                                     mctf, detection_interval, counting_lines, 30, distance_between_speed_labels, lines_orientation) # 30 fps
 
     record = ast.literal_eval(os.getenv('RECORD'))
     headless = ast.literal_eval(os.getenv('HEADLESS'))
