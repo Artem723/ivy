@@ -145,7 +145,7 @@ class VehicleCounter():
                 # delete untracked blobs
                 del self.blobs[_id]
 
-        if bool(self.frame_count % self.di):
+        if not bool(self.frame_count % self.di):
             # rerun detection
             droi_frame = get_roi_frame(self.frame, self.droi)
             _bounding_boxes, _classes, _confidences = get_bounding_boxes(

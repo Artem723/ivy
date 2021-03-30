@@ -56,6 +56,7 @@ def run():
     examining_lines = ast.literal_eval(os.getenv('EXAMINING_LINES'))
     counting_lines = None
     if lines_orientation == Orientation.VERTICAL:
+
         counting_lines = [{'label': l['label'], 'line': [l['start'], (l['start'][0], l['start'][1] + l['length'])]} for l in examining_lines]
     else:
         counting_lines = [{'label': l['label'], 'line': [l['start'], (l['start'][0] + l['length'], l['start'][1])]} for l in examining_lines]
