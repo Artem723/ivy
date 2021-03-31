@@ -1,0 +1,3 @@
+pip3 install requests # Used to download darknet
+pip3 install cython
+pip3 install yolo34py-gpu
