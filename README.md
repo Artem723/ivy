@@ -31,3 +31,9 @@ __PS:__ You can find out about how the vehicle counting system was built by chec
 
 ## Donate
 Love this project? You can [buy me a coffee or two](http://buymeacoff.ee/nicholaskajoh) to support its continued development. 😊
+
+## Dataset link
+https://ai.stanford.edu/~jkrause/cars/car_dataset.html
+https://sites.google.com/view/visionlearning/databases/image-database-for-vehicle-recognition
+https://public.roboflow.com/object-detection/vehicles-openimages/1/download
+https://lionbridge.ai/datasets/250000-cars-top-10-free-vehicle-image-and-video-datasets-for-machine-learning/

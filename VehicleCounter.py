@@ -16,7 +16,7 @@ logger = get_logger()
 
 class VehicleCounter():
 
-    def __init__(self, initial_frame, detector, tracker, droi, show_droi, mcdf, mctf, di, counting_lines, fps, distance_between_speed_labels):
+    def __init__(self, initial_frame, detector, tracker, droi, show_droi, mcdf, mctf, di, counting_lines, fps, distance_between_speed_labels, label_orientation):
         self.frame = initial_frame  # current frame of video
         self.detector = detector
         self.tracker = tracker
@@ -37,16 +37,16 @@ class VehicleCounter():
         # speed estimation props
         self.fps = fps if fps is not None else 30
         self.distance_between_speed_labels = distance_between_speed_labels if distance_between_speed_labels is not None else 10  # in meters
-        self.moving_orientation = Orientation.HORIZONTAL
+        self.label_orientation = label_orientation
         self.sum_speed = 0
         self.times_speed_counted = 0
         self.pxs_lenght_btw_labels = 0
         speed_labels = [ el for el in counting_lines if el['label'][-6:] == "_SPEED" ]
 
-        if not speed_labels:
-            if self.moving_orientation == Orientation.HORIZONTAL:
+        if speed_labels:
+            if self.label_orientation == Orientation.VERTICAL:
                 self.pxs_lenght_btw_labels = abs(speed_labels[0]['line'][0][0] - speed_labels[1]['line'][0][0])
-            elif self.moving_orientation == Orientation.VERTICAL:
+            elif self.label_orientation == Orientation.HORIZONTAL:
                 self.pxs_lenght_btw_labels = abs(speed_labels[0]['line'][0][1] - speed_labels[1]['line'][0][1])
 
 
@@ -99,7 +99,7 @@ class VehicleCounter():
                             blob.is_speed_being_estimated = True
                             blob.offset_pxs = self.get_offset(
                                 blob, counting_line)
-                            logger.debug('SPEED ESTIMATION STARTED', extra={
+                            logger.info('SPEED ESTIMATION STARTED', extra={
                                 'meta': {
                                     'label': "SPEED ESTIMATION",
                                     'label_name': label,
@@ -110,6 +110,17 @@ class VehicleCounter():
                         else:
                             blob.is_speed_being_estimated = False
                             speed_km_h = self.estimate_speed(blob)
+                            logger.info('SPEED ESTIMATED', extra={
+                                'meta': {
+                                    'label': "SPEED ESTIMATION",
+                                    'label_name': label,
+                                    'vehicle_id': _id,
+                                    'speed': speed_km_h,
+                                    'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A',
+                                    'counted_at': time.time(),
+                                    'frame_count': self.frame_count
+                                }
+                            })
 
                     if label == "C":
                         logger.info('Vehicle counted.', extra={
@@ -122,9 +133,9 @@ class VehicleCounter():
                                 'position_counted': blob.centroid,
                                 'counted_at': time.time(),
                                 'counts_by_type_per_line': self.counts_by_type_per_line,
-                                'estimated_speed': (speed_km_h if speed_km_h != -1 else 'N/A'),
                                 'FPS': self.fps,
-                                'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A'
+                                'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A',
+                                'frame_count': self.frame_count
                             },
                         })
             if blob.is_speed_being_estimated:
@@ -134,7 +145,7 @@ class VehicleCounter():
                 # delete untracked blobs
                 del self.blobs[_id]
 
-        if bool(self.frame_count % self.di):
+        if not bool(self.frame_count % self.di):
             # rerun detection
             droi_frame = get_roi_frame(self.frame, self.droi)
             _bounding_boxes, _classes, _confidences = get_bounding_boxes(
@@ -153,21 +164,26 @@ class VehicleCounter():
         # draw and label blob bounding boxes
         for _id, blob in self.blobs.items():
             (x, y, w, h) = [int(v) for v in blob.bounding_box]
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             vehicle_label = 'I: ' + _id[:8] \
                             if blob.type is None \
                             else 'I: {0}, T: {1} ({2})'.format(_id[:8], blob.type, str(blob.type_confidence)[:4])
             cv2.putText(frame, vehicle_label, (x, y - 5),
-                        font, 1, (255, 0, 0), 2, line_type)
+                        font, 0.9, (0, 255, 0), 1, line_type)
 
         # draw counting lines
         for counting_line in self.counting_lines:
+            if counting_line['label'] == 'C':
+                color = (255, 0, 0)
+            else: 
+                color = (0, 0, 255)
+
             cv2.line(frame, counting_line['line'][0],
-                     counting_line['line'][1], (255, 0, 0), 3)
+                     counting_line['line'][1], color, 3)
             cl_label_origin = (
                 counting_line['line'][0][0], counting_line['line'][0][1] + 35)
             cv2.putText(
-                frame, counting_line['label'], cl_label_origin, font, 1, (255, 0, 0), 2, line_type)
+                frame, counting_line['label'], cl_label_origin, font, 0.8, color, 1, line_type)
 
         # show detection roi
         if self.show_droi:
@@ -196,25 +212,25 @@ class VehicleCounter():
         if ratio > 1:
             return 0
 
-        return self.distance_between_speed_labels * ratio
+        return self.distance_between_speed_labels - self.distance_between_speed_labels * ratio
 
 
     def get_offset(self, blob, counting_line):
         """"Returns an offset in pixels of the blob crossing counting_line"""
-        label_prefix = counting_line['name'][0]
+        label_prefix = counting_line['label'][0]
         coord_label = 0
         coord_blob = 0
 
         offset = 0
 
-        if label_prefix != "R" or label_prefix != "L":
+        if label_prefix != "R" and label_prefix != "L":
             logger.error('ERROR', extra={
                 'meta': {
                     'label': 'ERROR',
                     'message': "The speed prefix should be 'L' or 'R' but found: '" + label_prefix + "'"
                 },
             })
-        if self.moving_orientation == Orientation.HORIZONTAL:
+        if self.label_orientation == Orientation.VERTICAL:
             coord_label = counting_line["line"][0][0]  # take X
             if label_prefix == "L":
                 coord_blob = blob.bounding_box[0] + blob.bounding_box[2]
