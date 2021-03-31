@@ -150,7 +150,8 @@ def run():
     if record:
         output_video.release()
     logger.info('Processing ended.', extra={'meta': {'label': 'END_PROCESS'}})
-
+    
+    vehicle_counter.log_results()
 
 if __name__ == '__main__':
     from dotenv import load_dotenv

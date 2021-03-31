@@ -249,3 +249,7 @@ class VehicleCounter():
                 offset = abs(coord_blob - coord_label)
 
         return offset
+
+
+    def log_results(self):
+        pass
