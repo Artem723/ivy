@@ -5,3 +5,4 @@ data/*
 .coverage
 venv
 venv37
+job_*
