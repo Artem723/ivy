@@ -1,14 +1,18 @@
 '''
 VCS entry point.
 '''
+import os
 
-def run():
+def esc(code):
+    return f'\033[{code}m'
+
+def run(video_file):
     '''
     Initialize counter class and run counting loop.
     '''
 
     import ast
-    import os
+
     import sys
     import time
     from util.orientation import Orientation
@@ -19,15 +23,15 @@ def run():
     from util.debugger import mouse_callback
     from VehicleCounter import VehicleCounter
 
-    logger = get_logger()
+    logger = get_logger(video_file)
     print("CV2: ", cv2)
     # capture traffic scene video
     is_cam = ast.literal_eval(os.getenv('IS_CAM'))
-    video = int(os.getenv('VIDEO')) if is_cam else os.getenv('VIDEO')
-    cap = cv2.VideoCapture(video)
+    # video_file = int(os.getenv('VIDEO')) if is_cam else os.getenv('VIDEO')
+    cap = cv2.VideoCapture(video_file)
     if not cap.isOpened():
         logger.error('Error capturing video. Invalid source.', extra={
-            'meta': {'label': 'VIDEO_CAPTURE', 'source': video},
+            'meta': {'label': 'VIDEO_CAPTURE', 'source': video_file},
         })
         sys.exit(0)
     ret, frame = cap.read()
@@ -153,11 +157,28 @@ def run():
     
     vehicle_counter.log_results()
 
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
-    load_dotenv()
-
     from util.logger import init_logger
-    init_logger()
+    
+    load_dotenv()
+    input = os.getenv('INPUT')    
 
-    run()
+    if os.path.isdir(input):
+        files = os.listdir(input)
+        for f_name in files:
+            ext = (f_name.split('.')).pop()
+            if ext == 'mp4':
+                init_logger(f_name)
+                run(os.path.join(input, f_name))
+    
+    elif os.path.isfile(input):
+        init_logger(input)
+        run(input)
+    
+    else:
+        print(esc('31;1;4') + 'ERROR:' + esc(0) + 'unknown INPUT.')
+
+    
+

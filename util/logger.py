@@ -35,12 +35,12 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
         log_record['level'] = record.levelname
 
 
-def init_logger():
+def init_logger(video_file_name):
     '''
     Setup logger.
     '''
 
-    job_id = get_job_id()
+    job_id = get_job_id(video_file_name)
 
     logger = logging.getLogger(job_id)
     logger.addFilter(MetaFilter())
@@ -87,8 +87,8 @@ def init_logger():
     logger.addHandler(file_handler)
 
 
-def get_logger():
+def get_logger(input_video):
     '''
     Fetch logger.
     '''
-    return logging.getLogger(get_job_id())
+    return logging.getLogger(get_job_id(input_video))
