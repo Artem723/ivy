@@ -65,7 +65,7 @@ def run(video_file_path):
     else:
         counting_lines = [{'label': l['label'], 'line': [l['start'], (l['start'][0] + l['length'], l['start'][1])]} for l in examining_lines]
     vehicle_counter = VehicleCounter(frame, detector, tracker, droi, show_droi, mcdf,
-                                     mctf, detection_interval, counting_lines, 30, distance_between_speed_labels, lines_orientation) # 30 fps
+                                     mctf, detection_interval, counting_lines, 30, distance_between_speed_labels, lines_orientation, video_file_path) # 30 fps
 
     record = ast.literal_eval(os.getenv('RECORD'))
     headless = ast.literal_eval(os.getenv('HEADLESS'))
@@ -171,11 +171,13 @@ if __name__ == '__main__':
             ext = (f_name.split('.')).pop()
             if ext == 'mp4':
                 path = os.path.join(input, f_name)
+                os.environ['PROCESSING_FILE_PATH'] = path
                 init_logger(path)
                 run(path)
     
     elif os.path.isfile(input):
         init_logger(input)
+        os.environ['PROCESSING_FILE_PATH'] = input
         run(input)
     
     else:

@@ -16,5 +16,6 @@ def test_init_logger():
 
 @patch.dict('os.environ', {'JOB_ID': job_id})
 def test_get_logger():
-    logger = get_logger()
+    file_path = os.environ['PROCESSING_FILE_PATH']
+    logger = get_logger(file_path)
     assert logger == logging.getLogger('job_123'), 'logger instance is retrieved'

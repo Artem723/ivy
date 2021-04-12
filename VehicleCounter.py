@@ -16,7 +16,7 @@ FPS = 30
 
 class VehicleCounter():
 
-    def __init__(self, initial_frame, detector, tracker, droi, show_droi, mcdf, mctf, di, counting_lines, fps, distance_between_speed_labels, label_orientation):
+    def __init__(self, initial_frame, detector, tracker, droi, show_droi, mcdf, mctf, di, counting_lines, fps, distance_between_speed_labels, label_orientation, video_file_path):
         self.frame = initial_frame  # current frame of video
         self.detector = detector
         self.tracker = tracker
@@ -43,7 +43,7 @@ class VehicleCounter():
         self.pxs_lenght_btw_labels = 0
         speed_labels = [ el for el in counting_lines if el['label'][-6:] == "_SPEED" ]
 
-        self.logger = get_logger()
+        self.logger = get_logger(video_file_path)
 
         if speed_labels:
             if self.label_orientation == Orientation.VERTICAL:

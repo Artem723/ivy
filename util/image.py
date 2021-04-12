@@ -7,12 +7,14 @@ import os
 from .logger import get_logger
 
 
-logger = get_logger()
 
 def take_screenshot(frame):
     '''
     Save frame to file as screenshot.
     '''
+    file_path = os.environ['PROCESSING_FILE_PATH']
+    logger = get_logger(file_path)
+
     screenshots_directory = 'data/screenshots'
     pathlib.Path(screenshots_directory).mkdir(parents=True, exist_ok=True)
     screenshot_path = os.path.join(screenshots_directory, 'img_' + uuid.uuid4().hex + '.jpg')

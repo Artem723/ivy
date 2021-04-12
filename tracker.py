@@ -8,9 +8,9 @@ from util.bounding_box import get_centroid, get_overlap, get_box_image
 from util.image import get_base64_image
 from util.vehicle_info import generate_vehicle_id
 from util.logger import get_logger
+import os
 
 
-logger = get_logger()
 
 def _csrt_create(bounding_box, frame):
     '''
@@ -32,6 +32,9 @@ def get_tracker(algorithm, bounding_box, frame):
     '''
     Fetch a tracker object based on the algorithm specified.
     '''
+    file_path = os.environ['PROCESSING_FILE_PATH']
+    logger = get_logger(file_path)
+    
     if algorithm == 'csrt':
         return _csrt_create(bounding_box, frame)
     if algorithm == 'kcf':
@@ -55,6 +58,9 @@ def add_new_blobs(boxes, classes, confidences, blobs, frame, tracker, mcdf):
     '''
     Add new blobs or updates existing ones.
     '''
+    file_path = os.environ['PROCESSING_FILE_PATH']
+    logger = get_logger(file_path)
+    
     matched_blob_ids = []
     for i, box in enumerate(boxes):
         _type = classes[i] if classes is not None else None
