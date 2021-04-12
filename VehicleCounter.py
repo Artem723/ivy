@@ -11,7 +11,7 @@ from counter import has_crossed_counting_line
 #       - use Right and LEft bars
 #       - use one BAR for counting
 FPS = 30
-logger = get_logger()
+
 
 
 class VehicleCounter():
@@ -43,6 +43,8 @@ class VehicleCounter():
         self.pxs_lenght_btw_labels = 0
         speed_labels = [ el for el in counting_lines if el['label'][-6:] == "_SPEED" ]
 
+        self.logger = get_logger()
+
         if speed_labels:
             if self.label_orientation == Orientation.VERTICAL:
                 self.pxs_lenght_btw_labels = abs(speed_labels[0]['line'][0][0] - speed_labels[1]['line'][0][0])
@@ -69,7 +71,7 @@ class VehicleCounter():
             if success:
                 blob.num_consecutive_tracking_failures = 0
                 blob.update(box)
-                logger.debug('Vehicle tracker updated.', extra={
+                self.logger.debug('Vehicle tracker updated.', extra={
                     'meta': {
                         'label': 'TRACKER_UPDATE',
                         'vehicle_id': _id,
@@ -99,7 +101,7 @@ class VehicleCounter():
                             blob.is_speed_being_estimated = True
                             blob.offset_pxs = self.get_offset(
                                 blob, counting_line)
-                            logger.info('SPEED ESTIMATION STARTED', extra={
+                            self.logger.info('SPEED ESTIMATION STARTED', extra={
                                 'meta': {
                                     'label': "SPEED ESTIMATION",
                                     'label_name': label,
@@ -110,7 +112,7 @@ class VehicleCounter():
                         else:
                             blob.is_speed_being_estimated = False
                             speed_km_h = self.estimate_speed(blob)
-                            logger.info('SPEED ESTIMATED', extra={
+                            self.logger.info('SPEED ESTIMATED', extra={
                                 'meta': {
                                     'label': "SPEED ESTIMATION",
                                     'label_name': label,
@@ -123,7 +125,7 @@ class VehicleCounter():
                             })
 
                     if label == "C":
-                        logger.info('Vehicle counted.', extra={
+                        self.logger.info('Vehicle counted.', extra={
                             'meta': {
                                 'label': 'VEHICLE_COUNT',
                                 'id': _id,
@@ -224,7 +226,7 @@ class VehicleCounter():
         offset = 0
 
         if label_prefix != "R" and label_prefix != "L":
-            logger.error('ERROR', extra={
+            self.logger.error('ERROR', extra={
                 'meta': {
                     'label': 'ERROR',
                     'message': "The speed prefix should be 'L' or 'R' but found: '" + label_prefix + "'"

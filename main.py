@@ -6,7 +6,7 @@ import os
 def esc(code):
     return f'\033[{code}m'
 
-def run(video_file):
+def run(video_file_path):
     '''
     Initialize counter class and run counting loop.
     '''
@@ -23,15 +23,15 @@ def run(video_file):
     from util.debugger import mouse_callback
     from VehicleCounter import VehicleCounter
 
-    logger = get_logger(video_file)
+    logger = get_logger(video_file_path)
     print("CV2: ", cv2)
     # capture traffic scene video
     is_cam = ast.literal_eval(os.getenv('IS_CAM'))
     # video_file = int(os.getenv('VIDEO')) if is_cam else os.getenv('VIDEO')
-    cap = cv2.VideoCapture(video_file)
+    cap = cv2.VideoCapture(video_file_path)
     if not cap.isOpened():
         logger.error('Error capturing video. Invalid source.', extra={
-            'meta': {'label': 'VIDEO_CAPTURE', 'source': video_file},
+            'meta': {'label': 'VIDEO_CAPTURE', 'source': video_file_path},
         })
         sys.exit(0)
     ret, frame = cap.read()
@@ -170,8 +170,9 @@ if __name__ == '__main__':
         for f_name in files:
             ext = (f_name.split('.')).pop()
             if ext == 'mp4':
-                init_logger(f_name)
-                run(os.path.join(input, f_name))
+                path = os.path.join(input, f_name)
+                init_logger(path)
+                run(path)
     
     elif os.path.isfile(input):
         init_logger(input)
