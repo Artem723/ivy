@@ -17,6 +17,6 @@ def get_job_id(input_file_path):
         # os.environ['JOB_ID'] = 'job_' + str(int(time.time())) + '_' + uuid.uuid4().hex
         os.environ['JOB_ID'] = 'job'
     if file_name not in job_ids:
-        job_ids[file_name] = 'job_' + file_name + time.strftime("%Y-%m-%d %H:%M:%S") + '_' + uuid.uuid4().hex
+        job_ids[file_name] = 'job_##' + file_name + '##' + time.strftime("%Y-%m-%d %H:%M:%S") + '_' + uuid.uuid4().hex
     
     return job_ids[file_name]

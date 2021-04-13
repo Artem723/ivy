@@ -77,7 +77,7 @@ def init_logger(video_file_name):
         pass
 
     # results loader
-    dorectory = "./"
+    dorectory = "./logs"
     pathlib.Path(dorectory).mkdir(parents=True, exist_ok=True)
     file_path = os.path.join(dorectory, job_id + '.log')
     file_handler = logging.FileHandler(file_path)
