@@ -254,4 +254,12 @@ class VehicleCounter():
 
 
     def log_results(self):
-        pass
+        self.logger.info('Results.', extra={
+                            'meta': {
+                                'label': 'STAT',
+                                'finished_time': time.time(),
+                                'counts_by_type_per_line': self.counts_by_type_per_line,
+                                'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A',
+                                'frame_count': self.frame_count
+                            },
+                        })

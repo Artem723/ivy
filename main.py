@@ -81,6 +81,7 @@ def run(video_file_path):
         'meta': {
             'label': 'START_PROCESS',
             'counter_config': {
+                'video_file': os.path.basename(video_file_path),
                 'di': detection_interval,
                 'mcdf': mcdf,
                 'mctf': mctf,
