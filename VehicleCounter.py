@@ -106,7 +106,10 @@ class VehicleCounter():
                                     'label': "SPEED ESTIMATION",
                                     'label_name': label,
                                     'vehicle_id': _id,
+                                    'type': blob.type,
                                     'offset': blob.offset_pxs,
+                                    'counted_at': time.time(),
+                                    'frame_count': self.frame_count
                                 }
                             })
                         else:
@@ -117,6 +120,7 @@ class VehicleCounter():
                                     'label': "SPEED ESTIMATION",
                                     'label_name': label,
                                     'vehicle_id': _id,
+                                    'type': blob.type,
                                     'speed': speed_km_h,
                                     'average_estimated_speed': (float(self.sum_speed) / self.times_speed_counted) if self.times_speed_counted != 0 else 'N/A',
                                     'counted_at': time.time(),
