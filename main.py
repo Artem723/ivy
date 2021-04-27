@@ -50,7 +50,7 @@ def run(video_file_path):
         lines_orientation = Orientation.HORIZONTAL
     # create detection region of interest polygon
     use_droi = ast.literal_eval(os.getenv('USE_DROI'))
-    distance_between_speed_labels = int(os.getenv('DISTANCE_BETWEEN_SPEED_LABELS'))
+    distance_between_speed_labels = float(os.getenv('DISTANCE_BETWEEN_SPEED_LABELS'))
     droi = ast.literal_eval(os.getenv('DROI')) \
             if use_droi \
             else [(0, 0), (f_width, 0), (f_width, f_height), (0, f_height)]
