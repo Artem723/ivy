@@ -90,7 +90,8 @@ def run(video_file_path):
                 'use_droi': use_droi,
                 'droi': droi,
                 'show_droi': show_droi,
-                'counting_lines': counting_lines
+                'counting_lines': counting_lines,
+                'log_version': '1.0.1'
             },
         },
     })
