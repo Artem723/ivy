@@ -128,7 +128,7 @@ class VehicleCounter():
                                 }
                             })
 
-                    if label == "C":
+                    if label[0] == "C":
                         self.logger.info('Vehicle counted.', extra={
                             'meta': {
                                 'label': 'VEHICLE_COUNT',
@@ -179,7 +179,7 @@ class VehicleCounter():
 
         # draw counting lines
         for counting_line in self.counting_lines:
-            if counting_line['label'] == 'C':
+            if counting_line['label'][0] == 'C':
                 color = (255, 0, 0)
             else: 
                 color = (0, 0, 255)
