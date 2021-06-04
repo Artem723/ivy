@@ -42,6 +42,7 @@ def run(video_file_path):
     mctf = int(os.getenv('MCTF'))
     detector = os.getenv('DETECTOR')
     tracker = os.getenv('TRACKER')
+    weights = os.getenv('YOLO_WEIGHTS_PATH')
     orientation_param = int(os.getenv('ORIENTATION'))
     lines_orientation = None
     if orientation_param == 1:
@@ -91,6 +92,8 @@ def run(video_file_path):
                 'droi': droi,
                 'show_droi': show_droi,
                 'counting_lines': counting_lines,
+                'YOLO_WEIGHTS': weights,
+                'DISTANCE_BETWEEN_LABELS': 'distance_between_speed_labels',
                 'log_version': '1.0.1'
             },
         },

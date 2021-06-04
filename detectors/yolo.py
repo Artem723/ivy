@@ -82,7 +82,7 @@ def get_bounding_boxes_gpu(img):
     _bounding_boxes, _classes, _confidences = [], [], []
     for cat, score, bounds in results:
         _class = str(cat.decode('utf-8'))
-        if _class in CLASSES_OF_INTEREST:
+        if score > conf_threshold and _class in CLASSES_OF_INTEREST:
             changed_bounds = list(bounds)
             changed_bounds[0] = changed_bounds[0] - bounds[2] / 2
             changed_bounds[1] = changed_bounds[1] - bounds[3] / 2

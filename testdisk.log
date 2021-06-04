@@ -1,0 +1,90 @@
+
+
+Tue Apr 27 15:02:41 2021
+Command line: TestDisk
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.4.0-54-generic (#60-Ubuntu SMP Fri Nov 6 10:37:59 UTC 2020) x86_64
+Compiler: GCC 9.2
+ext2fs lib: 1.45.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+User is not root!
+Hard disk list
+
+
+TestDisk exited normally.
+Using locale 'LC_CTYPE=en_US.UTF-8;LC_NUMERIC=it_IT.UTF-8;LC_TIME=en_US.UTF-8;LC_COLLATE=en_US.UTF-8;LC_MONETARY=it_IT.UTF-8;LC_MESSAGES=en_US.UTF-8;LC_PAPER=it_IT.UTF-8;LC_NAME=it_IT.UTF-8;LC_ADDRESS=it_IT.UTF-8;LC_TELEPHONE=it_IT.UTF-8;LC_MEASUREMENT=it_IT.UTF-8;LC_IDENTIFICATION=it_IT.UTF-8'.
+
+
+Tue Apr 27 15:02:41 2021
+Command line: TestDisk /debug
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.4.0-54-generic (#60-Ubuntu SMP Fri Nov 6 10:37:59 UTC 2020) x86_64
+Compiler: GCC 9.2
+ext2fs lib: 1.45.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+/dev/sda: LBA, HPA, LBA48, DCO support
+/dev/sda: size       976773168 sectors
+/dev/sda: user_max   976773168 sectors
+/dev/sda: native_max 976773168 sectors
+/dev/sda: dco        976773168 sectors
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop0 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop1 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop2 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop3 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop4 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop5 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop6 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop7 - 0 B - 0 sectors, sector size=512
+Hard disk list
+Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63, sector size=512 - WDC WD5000AAKX-75U6AA0, S/N:WD-WCC2EJW55302, FW:19.01H19
+
+Partition table type (auto): Intel
+Disk /dev/sda - 500 GB / 465 GiB - WDC WD5000AAKX-75U6AA0
+Partition table type: Intel
+
+Interface Advanced
+Geometry from i386 MBR: head=255 sector=63
+check_part_i386 1 type DE: no test
+check_part_i386 2 type 27: no test
+NTFS at 1603/249/55
+NTFS at 27100/134/43
+Info: size boot_sector 345308249, partition 345308255
+FAT32 at 48595/7/53
+Info: size boot_sector 1050624, partition 1050624
+FAT1 : 32-1055
+FAT2 : 1056-2079
+start_rootdir : 2080 root cluster : 2
+Data : 2080-1050623
+sectors : 1050624
+cluster_size : 8
+no_of_cluster : 131068 (2 - 131069)
+fat_length 1024 calculated 1024
+set_FAT_info: name from BS used
+get_geometry_from_list_part_aux head=255 nbr=3
+get_geometry_from_list_part_aux head=8 nbr=1
+get_geometry_from_list_part_aux head=16 nbr=1
+get_geometry_from_list_part_aux head=32 nbr=1
+get_geometry_from_list_part_aux head=64 nbr=1
+get_geometry_from_list_part_aux head=128 nbr=1
+get_geometry_from_list_part_aux head=240 nbr=1
+get_geometry_from_list_part_aux head=255 nbr=3
+ 1 P Dell Utility             0   1  1     4 254 63      80262
+ 2 * Windows RE(store)        5  25 21  1603 249 54   25686016
+ 3 P HPFS - NTFS           1603 249 55 27100 102 10  409600000 [OS]
+     NTFS, blocksize=4096, 209 GB / 195 GiB
+ 4 E extended LBA         27100 134 41 60801  47 46  541401090
+ 5 L HPFS - NTFS          27100 134 43 48594 248  5  345308255 [Dati]
+     NTFS, blocksize=4096, 176 GB / 164 GiB
+   X extended             48595   0  1 48660 109 25    1051117
+ 6 L FAT32                48595   7 53 48660 109 25    1050624 [NO NAME]
+     FAT32, blocksize=4096, 537 MB / 513 MiB
+   X extended             48660 109 26 60801  47 46  195041280
+ 7 L Linux                48660 141 58 60801  47 46  195039232
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 99 GB / 93 GiB
+
+TestDisk exited normally.
