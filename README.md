@@ -134,11 +134,55 @@ source <PATH>/bin/activate
 
 ## Configuration
 
-***TODO: Write about the configuration of .env file***
+The configuration file for the software is ***.env***. (If it is not initially visible, then enable the possibility to see the hidden files in the file explorer)
+This file contains the environment variables for the software, such as the input folder, the position of the examining lines etc.
+
+### Setting up the input
+
+In the ***.env***, set the path to the folder with the Miovision video files:
+
+```sh
+INPUT="<PATH_TO_VIDEO_OR_FOLDER>"
+```
+
+The extension of video files should be *\*.mp4*
+
+### Setting up the examining lines
+
+The examining lines (L_SPEED and R_SPEED on the image) serve for the speed estimation and counting of the vehicles. The vehicle is counted only if it passes two lines.
+
+```sh
+EXAMINING_LINES = [{'label': 'L_SPEED', 'start': (<L_X>, <L_Y>), 'length': <L_LENGTH>}, {'label': 'R_SPEED', 'start': (<R_X>, <R_Y>), 'length': <R_LENGTH>}, {'label': 'C', 'start': (300, 0), 'length': 400}]
+```
+The *\<L_X\>*, *\<L_Y\>* and *\<R_X\>*, *\<R_Y\>* position of the beginning point of the examining line on the video frame. On the picture they have coordinates (20; 20) and (450; 20).
+
+The *\<L_LENGTH>*\ and *\<R_LENGTH>*\ is the length in pixels of the examining lines. On the picture, the length is 300px.
+
+![Setting the examining lines](./assets/setting_examinin_lines.png)
+
+In order to better understand the position of the lines, press "P" (Pause) on keyboard to suspend the execution of the software, then left-click on the interested point of the video frame. In the terminal, you should see the relative position where you clicked:
+
+```sh
+[2024-07-18 18:00:13,935] INFO    : Pixel position captured. {'label': 'PIXEL_POSITION', 'position': (460, 310)}
+
+```
+
+Here, (460, 310) the position where the user clicked over the video frame.
+
+To resume the processing, press "P" again.
+
+### Setting the real distance in meters between the examining lines
+
+Assign the real distance between the examining lines in meters to the "DISTANCE_BETWEEN_SPEED_LABELS" parameter:
+
+```sh
+DISTANCE_BETWEEN_SPEED_LABELS = 6.5 # in METERS
+```
+
+This parameters serves primarily for the speed estimation.
 
 ## Run
 
-- Create _.env_ from _.env.example_ in the project root and edit as appropriate.
 - Run `python -m  main`.
 
 ## Demo
